@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PII Detection Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            color: #4CAF50;
+        }
+
+        h2, h3 {
+            margin-top: 20px;
+            color: #337ab7;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        pre {
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .no-results {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+        }
+
+        a {
+            text-decoration: none;
+            color: #337ab7;
+        }
+
+        a:hover {
+            color: #23527c;
+        }
+
+        .upload-again {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .upload-again a {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .upload-again a:hover {
+            background-color: #3e8e41;
+        }
+
+        .download-button {
+            display: block;
+            text-align: center;
+            margin: 40px auto 20px;
+        }
+
+        .download-button a {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .download-button a:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <h1>PII Detection Results</h1>
+
+    <!-- Detected PII Section -->
+    {% if pii.aadhaar or pii.pan or pii.driving_license or pii.voter_id %}
+        {% if pii.aadhaar %}
+            <h2>Aadhaar Numbers Detected:</h2>
+            <ul>
+                {% for num in pii.aadhaar %}
+                    <li>{{ num }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if pii.pan %}
+            <h2>PAN Numbers Detected:</h2>
+            <ul>
+                {% for num in pii.pan %}
+                    <li>{{ num }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if pii.driving_license %}
+            <h2>Driving License Numbers Detected:</h2>
+            <ul>
+                {% for num in pii.driving_license %}
+                    <li>{{ num }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        {% if pii.voter_id %}
+            <h2>Voter ID Numbers Detected:</h2>
+            <ul>
+                {% for num in pii.voter_id %}
+                    <li>{{ num }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <p class="no-results">NO PII FOUND in the uploaded document.</p>
+    {% endif %}
+
+    <!-- Masked PII Section -->
+    {% if masked_text.aadhaar or masked_text.pan or masked_text.driving_license or masked_text.voter_id %}
+        <h2>Masked PII:</h2>
+        <ul>
+            {% if masked_text.aadhaar %}
+                <h3>Masked Aadhaar Numbers:</h3>
+                {% for masked in masked_text.aadhaar %}
+                    <li>{{ masked }}</li>
+                {% endfor %}
+            {% endif %}
+
+            {% if masked_text.pan %}
+                <h3>Masked PAN Numbers:</h3>
+                {% for masked in masked_text.pan %}
+                    <li>{{ masked }}</li>
+                {% endfor %}
+            {% endif %}
+
+            {% if masked_text.driving_license %}
+                <h3>Masked Driving License Numbers:</h3>
+                {% for masked in masked_text.driving_license %}
+                    <li>{{ masked }}</li>
+                {% endfor %}
+            {% endif %}
+            
+            {% if masked_text.voter_id %}
+                <h3>Masked Voter ID Numbers:</h3>
+                {% for masked in masked_text.voter_id %}
+                    <li>{{ masked }}</li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    {% endif %}
+
+    <!-- Download Button -->
+    {% if pii.aadhaar or pii.pan or pii.driving_license or pii.voter_id %}
+        <div class="download-button">
+            <a href="{{ url_for('download_file') }}">Download Modified Document</a>
+        </div>
+    {% else %}
+        <p class="no-results">No PII data available for download.</p>
+    {% endif %}
+
+    <!-- Upload Again Button -->
+    <div class="upload-again">
+        <a href="/">Upload Another Document</a>
+    </div>
+</body>
+</html>
